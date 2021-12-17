@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages:
 import { Grid } from '@mui/material';
@@ -8,6 +8,17 @@ import LineGraph from '../Charts/LineGraph';
 import CountryMap from '../Charts/CountryMap';
 
 function SummaryInfo(props) {
+    const [mapData, setMapData] = useState({});
+
+    useEffect(() => {
+        if (props.selectedCountryID) {
+            import(`@highcharts/map-collection/countries/vn/vn-all.geo.json`)
+                .then((response) => {
+                    setMapData(response);
+                });
+        }
+    }, [props.selectedCountryID]);
+
     return (
         <div className='summary-info-wrapper'>
             <Grid container spacing={3}>
@@ -15,7 +26,7 @@ function SummaryInfo(props) {
                     <LineGraph data={props.report}></LineGraph>
                 </Grid>
                 <Grid item sm={4} xs={12}>
-                    <CountryMap></CountryMap>
+                    <CountryMap mapData={mapData}></CountryMap>
                 </Grid>
             </Grid>
         </div>

@@ -1,18 +1,16 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 // Packages:
 import moment from 'moment';
 import { Button, ButtonGroup } from '@mui/material';
-
-// Components:
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const gerenateChartOptions = (data, dateFormat = 'DD/MM/YYYY') => {
+const generateChartOptions = (data, dateFormat = 'DD/MM/YYYY') => {
     let categories = [];
     let infectedPatients = [], recoveredPatients = [], deadPatients = [];
-    const yearFrom = 2016;
-    const yearTo = 2021;
+    // const yearFrom = 2016;
+    // const yearTo = 2021;
 
     if (data) {
         categories = data.map((element) => moment(element.Date).format(dateFormat));
@@ -22,6 +20,9 @@ const gerenateChartOptions = (data, dateFormat = 'DD/MM/YYYY') => {
     }
 
     return {
+        chart: {
+            height: 500,
+        },
         title: {
             text: 'Thống kê bệnh nhân nhiễm Covid-19'
         },
@@ -31,11 +32,13 @@ const gerenateChartOptions = (data, dateFormat = 'DD/MM/YYYY') => {
         colors: ['#bb0a1e', '#228B22', '#152238'],
         xAxis: {
             categories: categories,
+            crosshair: true,
             title: {
-                text: `Năm (${yearFrom} - ${yearTo})`
+                text: `Số liệu thống kê theo thời gian`
             }
         },
         yAxis: {
+            min: 0,
             title: {
                 text: 'Số bệnh nhân'
             },
@@ -59,6 +62,9 @@ const gerenateChartOptions = (data, dateFormat = 'DD/MM/YYYY') => {
                     radius: 4,
                     lineColor: '#666666',
                     lineWidth: 1
+                },
+                series: {
+                    animation: true
                 }
             }
         },
@@ -105,7 +111,7 @@ function LineGraph(props) {
                 dataToBeReported = props.data.slice(props.data.length - 180);
                 break;
         }
-        setOptions(gerenateChartOptions(dataToBeReported));
+        setOptions(generateChartOptions(dataToBeReported));
     }, [props.data, reportScope]);
 
     return (
@@ -146,4 +152,4 @@ function LineGraph(props) {
     );
 }
 
-export default LineGraph;
+export default memo(LineGraph);
