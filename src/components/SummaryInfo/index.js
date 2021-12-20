@@ -12,7 +12,6 @@ function SummaryInfo(props) {
 
     useEffect(() => {
         if (props.selectedCountryID) {
-            // PROBLEM: THIS LINE OF CODE DOES NOT WORK:
             import(`@highcharts/map-collection/countries/${props.selectedCountryID}/${props.selectedCountryID}-all.geo.json`)
                 .then((response) => {
                     setMapData(response);
